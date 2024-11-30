@@ -14,13 +14,33 @@ const postLogout = async () => {
     return axios.post('/auth/logout');
 }
 
-const getListFood = async () => {
-    return axios.get('/food/list');
+const getAllProducts = async () => {
+    return axios.get('/products');
+}
+
+const getProductById = async (id) => {
+        return axios.get(`/products/${id}`);
+}
+/**
+    "maincategory": "GET /api/products/filter?mainCategories=Coffee",
+    "multiplemain": "GET /api/products/filter?mainCategories[]=Coffee&mainCategories[]=Tea",
+    "sub": "GET /api/products/filter?subCategory=Espresso",
+    "mutilplesub": "GET /api/products/filter?mainCategories[]=Coffee&subCategory=Espresso" 
+*/ 
+const getProductsByCategory = async (category) => {
+    return axios.get(`/products/filter?mainCategories=${category}`);
+}
+
+const getProductsBySubCategory = async (subCategory) => {
+    return axios.get(`/products/filter?subCategory=${subCategory}`);
 }
 
 export {
     postLogin,
-    getListFood,
     postLogout,
-    postRegister
+    postRegister,
+    getAllProducts,
+    getProductById,
+    getProductsByCategory,
+    getProductsBySubCategory
 }

@@ -18,7 +18,7 @@ const MainLayout = () => {
         <Header onCartClick={handleCartToggle} />
       </div>
       <CartSidebar isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
-      <div className="w-[80%] mx-auto flex-1">
+      <div className="flex-1">
         <Outlet />
       </div>
       <Footer />

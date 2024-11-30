@@ -10,7 +10,7 @@ function ProductDetailModal({ product, isOpen, onClose }) {
   const isPizza = product?.productType === 'pizza';
 
   useEffect(() => {
-    if (isPizza && !product?.prices?.small) {
+    if (isPizza && !product?.price?.small) {
       setSize('medium');
     }
   }, [product, isPizza]);
@@ -33,21 +33,21 @@ function ProductDetailModal({ product, isOpen, onClose }) {
 
   const getCheeseOptionPrice = (option) => {
     if (option === 0) return 0;
-    const cheesePrices = {
+    const cheeseprice = {
       small: { 25000: 25000, 40000: 40000, 60000: 60000 },
       medium: { 25000: 30000, 40000: 50000, 60000: 70000 },
-      big: { 25000: 35000, 40000: 60000, 60000: 85000 },
+      large: { 25000: 35000, 40000: 60000, 60000: 85000 },
     };
-    return cheesePrices[size][option];
+    return cheeseprice[size][option];
   };
 
   const getTotalPrice = () => {
     if (isPizza) {
-      const basePrice = product.prices?.[size] || 0;
+      const basePrice = product.price?.[size] || 0;
       const totalPrice = (basePrice + getCheeseOptionPrice(cheeseOption)) * quantity;
       return totalPrice.toLocaleString();
     } else {
-      return (product.prices.small * quantity).toLocaleString();
+      return (product.price.small * quantity).toLocaleString();
     }
   };
 
@@ -86,27 +86,27 @@ function ProductDetailModal({ product, isOpen, onClose }) {
                   <div>
                     <h3 className="font-bold text-base mb-2">Chọn Cỡ bánh:</h3>
                     <div className="space-y-2 font-bold text-sm text-gray-500 pl-3 pt-2">
-                      {product.prices?.small && (
+                      {product.price?.small && (
                         <div className='border-b pb-2'>
                           <label>
                             <input type="radio" value="small" checked={size === 'small'} onChange={handleSizeChange} />
-                            <span className='p-4'> Cỡ Nhỏ = {product.prices.small.toLocaleString()}đ </span>
+                            <span className='p-4'> Cỡ Nhỏ = {product.price.small.toLocaleString()}đ </span>
                           </label>
                         </div>
                       )}
-                      {product.prices?.medium && (
+                      {product.price?.medium && (
                         <div className='border-b pb-2'>
                           <label>
                             <input type="radio" value="medium" checked={size === 'medium'} onChange={handleSizeChange} className="" />
-                            <span className='p-4'>Cỡ Vừa = {product.prices.medium.toLocaleString()}đ</span>
+                            <span className='p-4'>Cỡ Vừa = {product.price.medium.toLocaleString()}đ</span>
                           </label>
                         </div>
                       )}
-                      {product.prices?.big && (
+                      {product.price?.large && (
                         <div className='border-b pb-2'>
                           <label>
-                            <input type="radio" value="big" checked={size === 'big'} onChange={handleSizeChange} className="" />
-                            <span className='p-4'>Cỡ To = {product.prices.big.toLocaleString()}đ </span>
+                            <input type="radio" value="large" checked={size === 'large'} onChange={handleSizeChange} className="" />
+                            <span className='p-4'>Cỡ To = {product.price.large.toLocaleString()}đ </span>
                           </label>
                         </div>
                       )}

@@ -63,8 +63,7 @@ const Home = () => {
   ];
 
   return (
-    <>
-      
+    <div className='w-[80%] mx-auto'>
       <div
         className="banner h-[34vw] my-[30px] mx-auto bg-no-repeat bg-contain relative"
         style={{ backgroundImage: `url(${bannerImage})` }}
@@ -217,7 +216,7 @@ const Home = () => {
       </div>
       
 
-    </>
+    </div>
   );
 };
 

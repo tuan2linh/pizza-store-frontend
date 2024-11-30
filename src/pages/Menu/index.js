@@ -1,12 +1,10 @@
 //#region Imports
 import React, { useState, useEffect } from 'react';
-import { pizzaData } from '../../data/pizzaData';
-import { chickenData } from '../../data/chickenData';
 import { FaPizzaSlice, FaFish, FaDrumstickBite, FaBacon, FaLeaf, FaList, FaUtensils, FaIceCream, FaCoffee } from 'react-icons/fa';
 import { LuBeef } from "react-icons/lu";
 import { useLocation } from 'react-router-dom';
 import ProductDetailModal from '../../components/ProductDetailModal';
-import { getListFood } from '../../services/apiService';
+import { getAllProducts,getProductById,getProductsByCategory, getProductsBySubCategory } from '../../services/apiService';
 //#endregion
 
 //#region Menu Component
@@ -18,7 +16,9 @@ function Menu() {
     const [activeCategory, setActiveCategory] = useState('all');
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [products, setProducts] = useState([]);
+    const [pizzaData, setPizzaData] = useState([]);
+    const [chickenData, setChickenData] = useState([]);
     const [pastaData, setPastaData] = useState([]);
 
     useEffect(() => {
@@ -33,14 +33,30 @@ function Menu() {
     }, []);
 
     useEffect(() => {
-        getAllFood();
+        getAllProduct();
+        getAllChickens();
     }, []);
+
+    useEffect(() => {
+        getAllPizzas();
+    }, [activeCategory]);
+
 
     const handleProductClick = (product, type) => {
         setSelectedProduct({ ...product, productType: type });
         setIsModalOpen(true);
     };
-
+    const getAllProduct = async () => {
+        try {
+            const response = await getAllProducts();
+            if (response) {
+                setProducts(response.data);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
     //#endregion
     
     //#region Category Definitions
@@ -64,13 +80,35 @@ function Menu() {
     //#endregion
 
     //#region Helper Functions
-    const getAllPizzas = () => {
-        if (activeCategory === 'all') {
-            return pizzaData.products;
-       } 
-        return pizzaData.products.filter(pizza => 
-            pizza.categories.includes(activeCategory)
-        );
+    const getAllPizzas = async () => {
+        try {
+            if(activeCategory === 'all'){
+                const response = await getProductsByCategory('pizza');
+                if (response) {
+                    setPizzaData(response.data);
+                }
+            }
+            else{
+                const response = await getProductsBySubCategory(activeCategory);
+                if (response) {
+                    setPizzaData(response.data);
+                }
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+    const getAllChickens = async () => {
+        try {
+            const response = await getProductsByCategory('chicken');
+            if (response) {
+                setChickenData(response.data);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
     };
     //#endregion
 
@@ -93,7 +131,7 @@ function Menu() {
                 ))}
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {getAllPizzas().map((pizza) => (
+                {pizzaData.map((pizza) => (
                     <div key={pizza.id} 
                          className="bg-white rounded-lg shadow-md overflow-hidden max-w-xs flex flex-col justify-between h-80 cursor-pointer"
                          onClick={() => handleProductClick(pizza, 'pizza')}>
@@ -109,7 +147,7 @@ function Menu() {
                         </div>
                         <div className="p-3 text-center">
                             <div className="text-sm font-bold">
-                                <p>Medium - {pizza.prices.medium.toLocaleString()}đ</p>
+                                <p>Medium - {pizza.price.medium.toLocaleString()}đ</p>
                             </div>
                         </div>
                     </div>
@@ -120,7 +158,7 @@ function Menu() {
 
     const renderChickenSection = () => (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {chickenData.products.map((chicken) => (
+            {chickenData.map((chicken) => (
                 <div key={chicken.id} 
                      className="bg-white rounded-lg shadow-md overflow-hidden max-w-xs flex flex-col justify-between h-80 cursor-pointer"
                      onClick={() => handleProductClick(chicken, 'chicken')}>
@@ -137,25 +175,13 @@ function Menu() {
                     </div>
                     <div className="p-3 text-center">
                         <div className="text-sm font-bold">
-                            <p>Small - {chicken.prices.small.toLocaleString()}đ</p>
+                            <p>Small - {chicken.price.small.toLocaleString()}đ</p>
                         </div>
                     </div>
                 </div>
             ))}
         </div>
     );
-
-    const getAllFood = async () => {
-        try{
-            const data = await getListFood();
-            if(data){
-                setPastaData(data);
-                console.log(data);
-            }
-        } catch (error){
-            console.log(error);
-        }
-    }
     //#endregion
 
     //#region Main Render

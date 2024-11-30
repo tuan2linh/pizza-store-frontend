@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { pizzaData } from '../../data/pizzaData';
 import { cartItems } from '../../data/cartItems'; // Import cartItems
 import order1 from '../../assets/order1.png';
 import order2 from '../../assets/order2.png';
+const {getAllProducts} = require('../../services/apiService');
 
 const Cart = () => {
   const navigate = useNavigate();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const recommendedItems = pizzaData.products.slice(0, 10); // Move this line to the top
+  const [products, setProducts] = useState([]);
+  const recommendedItems = products.slice(0, 10); // Move this line to the top
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % recommendedItems.length);
   };
@@ -30,6 +31,22 @@ const Cart = () => {
   const handlePayment = () => {
     navigate('/payment');
   };
+
+  useEffect(() => {
+    getAllProduct();
+  }, []);
+
+  const getAllProduct = async () => {
+    try {
+        const response = await getAllProducts();
+        if (response) {
+            setProducts(response.data);
+        }
+    }
+    catch (error) {
+        console.log(error);
+    }
+  }
 
   return (
     <>
@@ -107,7 +124,7 @@ const Cart = () => {
                         <h3 className="text-sm font-medium text-[#0078ae] h-12 overflow-hidden">{item.name}</h3>
                       </div>
                       <div className="mt-auto text-center">
-                        <span className="text-xs text-[#6c757d] font-bold block mt-0 mb-4">{item.prices.medium.toLocaleString('vi-VN')}₫</span>
+                        <span className="text-xs text-[#6c757d] font-bold block mt-0 mb-4">{item.price.medium.toLocaleString('vi-VN')}₫</span>
                         <button className="bg-orange-400 hover:bg-orange-500 text-white text-xs font-bold py-1 px-2 rounded">Thêm vào Giỏ Hàng</button>
                       </div>
                     </div>
