@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { cartItems } from '../../data/cartItems'; // Import cartItems
+import { useDispatch } from 'react-redux';
 import order1 from '../../assets/order1.png';
 import order2 from '../../assets/order2.png';
-const {getAllProducts} = require('../../services/apiService');
+import { getAllProducts } from '../../services/apiService';
+import { getUserCart, updateQuantity, removeItemFromCart } from '../../services/apiService';
+import { toast } from 'react-toastify';
 
 const Cart = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState({});
+  const [itemsCart, setItemsCart] = useState([]);
   const recommendedItems = products.slice(0, 10); // Move this line to the top
   const handleNext = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % recommendedItems.length);
@@ -26,27 +31,76 @@ const Cart = () => {
     }
   };
 
-  const totalPrice = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const sizeMapping = {
+    small: 'Nhỏ',
+    medium: 'Vừa',
+    large: 'Lớn'
+  };
 
-  const handlePayment = () => {
-    navigate('/payment');
+  const totalPrice = cart.totalAmount || 0;
+
+  const handleOrder = () => {
+    navigate('/order');
   };
 
   useEffect(() => {
     getAllProduct();
+    getCart();
   }, []);
 
   const getAllProduct = async () => {
     try {
-        const response = await getAllProducts();
-        if (response) {
-            setProducts(response.data);
-        }
+      const response = await getAllProducts();
+      if (response) {
+        setProducts(response.data);
+      }
     }
     catch (error) {
-        console.log(error);
+      console.log(error);
     }
   }
+
+  const getCart = async () => {
+    try {
+      const response = await getUserCart();
+      if (response && response.data) {
+        setCart(response.data);
+        setItemsCart(response.data.items);
+        dispatch({ type: 'SET_CART_ITEMS_COUNT', payload: response.data.items.length });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateQuantity = async (itemId, quantity) => {
+    try {
+      const update = await updateQuantity(itemId, quantity);
+      if (update) {
+        getCart();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDelete = async (itemId) => {
+    try {
+      const response = await removeItemFromCart(itemId);
+      if (response && response.success === true) {
+        setItemsCart(prevItems => {
+          const newItems = prevItems.filter(item => item._id !== itemId);
+          dispatch({ type: 'SET_CART_ITEMS_COUNT', payload: newItems.length });
+          return newItems;
+        });
+        await getCart();
+        toast.success('Đã xóa sản phẩm khỏi giỏ hàng');
+      }
+    } catch (error) {
+      toast.error('Có lỗi xảy ra khi xóa sản phẩm khỏi giỏ hàng');
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -57,26 +111,39 @@ const Cart = () => {
         <div className="w-full max-w-3xl z-10 xl:mx-8">
           <h1 className="text-2xs font-bold mb-4 text-left">Giỏ Hàng Của Bạn</h1>
           <div className="bg-white rounded-lg shadow-md p-4 mb-6 flex flex-col items-center w-full">
-            {cartItems.map((item, index) => (
+            {itemsCart.map((item, index) => (
               <div key={index} className="flex items-center mb-4 w-full">
                 <div className="w-36 h-28 mr-4 flex-shrink-0">
-                  <img src={item.image} alt={item.name} className="w-full h-full object-cover rounded" />
+                  <img src={item.productId.image} alt={item.productId.name} className="w-full h-full object-cover rounded" />
                 </div>
                 <div className="flex flex-col w-full">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-lg font-medium mb-2 flex-1">{item.name}</h3>
-                    <span className="text-lg font-medium mx-4">{item.price.toLocaleString('vi-VN')}₫</span>
+                    <h3 className="text-lg font-medium mb-2 flex-1">{item.productId.name}</h3>
+                    <span className="text-lg font-medium mx-4">{item.subTotal.toLocaleString('vi-VN')}₫</span>
                     <div className="flex items-center border border-gray-300 rounded">
-                      <button className="px-2 py-1">-</button>
+                      <button className="px-2 py-1" onClick={() => handleUpdateQuantity(item._id, item.quantity - 1)}>-</button>
                       <span className="px-2">{item.quantity}</span>
-                      <button className="px-2 py-1">+</button>
+                      <button className="px-2 py-1" onClick={() => handleUpdateQuantity(item._id, item.quantity + 1)}>+</button>
                     </div>
                   </div>
-                  <ul className="text-xs text-[#6c757d] font-bold">
-                    {item.options.map((option, index) => (
-                      <li key={index}>- {option}</li>
-                    ))}
-                  </ul>
+                  <div className="flex justify-between items-start">
+                    <ul className="text-xs text-[#6c757d] font-bold list-none pl-4 w-1/2">
+                      <li className="relative before:content-['*'] before:absolute before:left-[-1em] before:text-[#6c757d]">
+                        {item.productId.description}
+                      </li>
+                      <li className="relative before:content-['*'] before:absolute before:left-[-1em] before:text-[#6c757d]">
+                        Cỡ: {sizeMapping[item.size] || item.size}
+                      </li>
+                    </ul>
+                    <button 
+                      onClick={() => handleDelete(item._id)} 
+                      className="text-gray-500 hover:text-red-500 p-2 mt-5"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -104,8 +171,8 @@ const Cart = () => {
               <span>Phí Giao Hàng</span>
               <span className="text-red-600">0₫</span>
             </div>
-            <button 
-              onClick={handlePayment}
+            <button
+              onClick={handleOrder}
               className="bg-orange-400 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded mt-4 w-full"
             >
               Thanh Toán {totalPrice.toLocaleString('vi-VN')}₫

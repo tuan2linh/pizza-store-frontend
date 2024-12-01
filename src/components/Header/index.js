@@ -23,7 +23,7 @@ const NAV_ITEMS = [
   { id: 1, name: "Trang chủ", link: "/" },
   { id: 2, name: "Thực đơn", link: "/menu", hasSubmenu: true },
   { id: 3, name: "Chương trình khuyến mãi", link: "/promotion" },
-  { id: 4, name: "Theo dõi đơn hàng", link: "/order" },
+  { id: 4, name: "Theo dõi đơn hàng", link: "/order-list" },
   { id: 5, name: "Liên hệ chúng tôi", link: "/contact" },
 ];
 
@@ -49,6 +49,10 @@ function Header({ onCartClick }) {
   //#region Hooks
   const account = useSelector((state) => state.user.account);
   const isAuthenticated = account?.isAuthenticated;
+  let itemCount = useSelector((state) => state.cart.itemCount);
+  if (!isAuthenticated) {
+    itemCount = 0;
+  }
   const timeoutId = useRef(null);
   const navigate = useNavigate();
   const location = useLocation();
@@ -166,7 +170,7 @@ function Header({ onCartClick }) {
                     ></path>
                   </svg>
                   <span className="absolute left-auto -ml-1 -top-1 rounded-full bg-red-500 px-1 py-0 text-xs text-white">
-                    0
+                    {itemCount}
                   </span>
                 </button>
               </span>

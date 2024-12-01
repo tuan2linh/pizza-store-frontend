@@ -1,7 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';  // Add useDispatch
+import { addItemToCart } from '../../services/apiService';
+import { toast } from 'react-toastify';
 
 function ProductDetailModal({ product, isOpen, onClose }) {
+  const dispatch = useDispatch(); // Add dispatch
+  const currentCount = useSelector(state => state.cart.itemCount); // Move this to component level
   const [size, setSize] = useState('small');
   const [cheeseOption, setCheeseOption] = useState(0);
   const [quantity, setQuantity] = useState(1);
@@ -50,6 +54,25 @@ function ProductDetailModal({ product, isOpen, onClose }) {
       return (product.price.small * quantity).toLocaleString();
     }
   };
+
+  const handleAddToCart = async () => {
+    try{
+      console.log(product, quantity, size);
+      const response = await addItemToCart(product._id, quantity, size);
+      console.log(response);
+      if (response && response.success===true) {
+        // Use the currentCount from the component level
+        dispatch({ type: 'SET_CART_ITEMS_COUNT', payload: currentCount + 1 });
+        
+        toast.success('Đã thêm vào giỏ hàng');
+        onClose();
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Đã xảy ra lỗi khi thêm vào giỏ hàng');
+    }
+  };
+
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -189,7 +212,7 @@ function ProductDetailModal({ product, isOpen, onClose }) {
                 </div>
                 <button
                   className="bg-orange-500 text-xs font-bold text-white px-4 h-8 rounded hover:bg-orange-600 flex-shrink-0 "
-                  onClick={() => alert(`Thêm vào giỏ hàng với giá ${getTotalPrice()}đ`)}
+                  onClick={handleAddToCart}
                 >
                   Thêm vào giỏ hàng ({getTotalPrice()}đ)
                 </button>

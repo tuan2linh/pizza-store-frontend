@@ -1,14 +1,26 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
 import Header from '../components/Header';
 import CartSidebar from '../components/CartSidebar';
 import { useState } from 'react';
+import { useSelector, useDispatch } from "react-redux";
+import { toast } from 'react-toastify';
 
 const MainLayout = () => {
   const [isCartOpen, setIsCartOpen] = useState(false);
+  const account = useSelector((state) => state.user.account);
+  const isAuthenticated = account?.isAuthenticated;
+  const location = useLocation();
 
   const handleCartToggle = () => {
+    if (location.pathname === '/cart') {
+      return;
+    }
+    if (!isAuthenticated) {
+      toast.error("Please login to continue");
+      return;
+    }
     setIsCartOpen(!isCartOpen);
   };
 

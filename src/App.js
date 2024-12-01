@@ -6,10 +6,10 @@ import './App.css'
 import Home from './pages/Home'
 import Menu from './pages/Menu'
 import Promotion from './pages/Promotion'
-import Order from './pages/Order'
+import OrderList from './pages/OrderList'
 import Contact from './pages/Contact'
 import Cart from './pages/Cart'
-import Payment from './pages/Payment'
+import Order from './pages/Order'
 import Stores from './pages/Stores';
 import Dashboard from './pages/Admin/Dashboard'
 import AdminLayout from './layouts/AdminLayout';
@@ -25,10 +25,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/promotion" element={<Promotion />} />
-            <Route path="/order" element={<Order />} />
+            <Route path="/order-list" element={<OrderList />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/payment" element={<Payment />} />
+            <Route path="/order" element={<Order />} />
             <Route path="/stores" element={<Stores />} />
           </Route>
 
@@ -48,7 +48,7 @@ function App() {
         </Routes>
       </div>
       <ToastContainer
-        position="top-right"
+        position="top-center"
         autoClose={3000}
         hideProgressBar={false}
         newestOnTop={false}
