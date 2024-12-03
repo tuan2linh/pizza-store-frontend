@@ -11,7 +11,7 @@ function Stores() {
 
   return (
     <>
-      <div className="py-8">
+      <div className="py-8 w-[80%] mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8">Hệ Thống Cửa Hàng</h1>
         
         <div className="mb-6">

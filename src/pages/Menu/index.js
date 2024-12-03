@@ -19,6 +19,7 @@ function Menu() {
     const [products, setProducts] = useState([]);
     const [pizzaData, setPizzaData] = useState([]);
     const [chickenData, setChickenData] = useState([]);
+    const [drinkData, setDrinkData] = useState([]);
     const [pastaData, setPastaData] = useState([]);
 
     useEffect(() => {
@@ -35,6 +36,7 @@ function Menu() {
     useEffect(() => {
         getAllProduct();
         getAllChickens();
+        getAllDrinks();
     }, []);
 
     useEffect(() => {
@@ -110,6 +112,18 @@ function Menu() {
             console.log(error);
         }
     };
+
+    const getAllDrinks = async () => {
+        try {
+            const response = await getProductsByCategory('drinks');
+            if (response && response.success===true) {
+                setDrinkData(response.data);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
     //#endregion
 
     //#region Section Renderers
@@ -147,7 +161,7 @@ function Menu() {
                         </div>
                         <div className="p-3 text-center">
                             <div className="text-sm font-bold">
-                                <p>Medium - {pizza.price.medium.toLocaleString()}đ</p>
+                                <p>Medium - {pizza?.price?.medium?.toLocaleString()}đ</p>
                             </div>
                         </div>
                     </div>
@@ -155,7 +169,6 @@ function Menu() {
             </div>
         </>
     );
-
     const renderChickenSection = () => (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {chickenData.map((chicken) => (
@@ -171,17 +184,42 @@ function Menu() {
                     </div>
                     <div className="p-3">
                         <h3 className="text-lg font-bold mb-1 text-center text-[#0078ae] hover:underline cursor-pointer">{chicken.name}</h3>
-                        <p className="text-sm text-gray-600 text-center">{chicken.description}</p>
                     </div>
                     <div className="p-3 text-center">
                         <div className="text-sm font-bold">
-                            <p>Small - {chicken.price.small.toLocaleString()}đ</p>
+                            <p>{chicken?.price?.medium?.toLocaleString()}đ</p>
                         </div>
                     </div>
                 </div>
             ))}
         </div>
     );
+    const renderDrinkSection = () => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {drinkData.map((drink) => (
+                <div key={drink.id} 
+                     className="bg-white rounded-lg shadow-md overflow-hidden max-w-xs flex flex-col justify-between h-80 cursor-pointer"
+                     onClick={() => handleProductClick(drink, 'drink')}>
+                    <div className="relative w-full h-48 bg-gray-100 overflow-hidden group">
+                        <img
+                            src={drink.image}
+                            alt={drink.name}
+                            className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        />
+                    </div>
+                    <div className="p-3">
+                        <h3 className="text-lg font-bold mb-1 text-center text-[#0078ae] hover:underline cursor-pointer">{drink.name}</h3>
+                        <p className="text-sm text-gray-600 text-center">{drink.description}</p>
+                    </div>
+                    <div className="p-3 text-center">
+                        <div className="text-sm font-bold">
+                            <p>Medium - {drink.price.medium.toLocaleString()}đ</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    ); 
     //#endregion
 
     //#region Main Render
@@ -210,7 +248,7 @@ function Menu() {
                 {activeMainCategory === 'pasta' && <div>abc</div>}
                 {activeMainCategory === 'appetizers' && <div>Appetizers Section</div>}
                 {activeMainCategory === 'desserts' && <div>Desserts Section</div>}
-                {activeMainCategory === 'drinks' && <div>Drinks Section</div>}
+                {activeMainCategory === 'drinks' && renderDrinkSection()}
             </div>
             <ProductDetailModal
                 product={selectedProduct}

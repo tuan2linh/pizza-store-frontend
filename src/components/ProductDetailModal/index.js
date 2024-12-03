@@ -51,7 +51,7 @@ function ProductDetailModal({ product, isOpen, onClose }) {
       const totalPrice = (basePrice + getCheeseOptionPrice(cheeseOption)) * quantity;
       return totalPrice.toLocaleString();
     } else {
-      return (product.price.small * quantity).toLocaleString();
+      return (product.price.medium * quantity).toLocaleString();
     }
   };
 
@@ -90,12 +90,7 @@ function ProductDetailModal({ product, isOpen, onClose }) {
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-1/2"
-            />
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-full h-1/2"
+              className="h-full w-full object-cover rounded-lg"
             />
           </div>
           <div className="md:w-3/5 pl-5 pt-3 pr-2 pb-4">

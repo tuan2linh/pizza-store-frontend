@@ -7,17 +7,8 @@ import LoginModal from "../Login";
 import { doLogout } from "../../redux/action/userAction";
 import { toast } from "react-toastify";
 import { postLogout } from "../../services/apiService";
-//#endregion
 
-//#region Constants
-const MENU_ITEMS = [
-  { id: 1, name: "Pizza", link: "/menu/pizza" },
-  { id: 2, name: "Gà", link: "/menu/chicken" },
-  { id: 3, name: "Mỳ Ý", link: "/menu/pasta" },
-  { id: 4, name: "Khai Vị", link: "/menu/appetizer" },
-  { id: 5, name: "Tráng Miệng", link: "/menu/dessert" },
-  { id: 6, name: "Thức Uống", link: "/menu/drinks" },
-];
+//#endregion
 
 const NAV_ITEMS = [
   { id: 1, name: "Trang chủ", link: "/" },
@@ -26,15 +17,6 @@ const NAV_ITEMS = [
   { id: 4, name: "Theo dõi đơn hàng", link: "/order-list" },
   { id: 5, name: "Liên hệ chúng tôi", link: "/contact" },
 ];
-
-const CATEGORY_MAPPING = {
-  '/menu/chicken': 'chicken',
-  '/menu/pizza': 'pizza',
-  '/menu/pasta': 'pasta',
-  '/menu/appetizer': 'appetizers',
-  '/menu/dessert': 'desserts',
-  '/menu/drinks': 'drinks'
-};
 //#endregion
 
 function Header({ onCartClick }) {
@@ -97,13 +79,6 @@ function Header({ onCartClick }) {
     }
     setIsOpen(true);
   };
-
-  const handleSubmenuClick = (categoryKey) => {
-    navigate('/menu', {
-      state: { activeMainCategory: CATEGORY_MAPPING[categoryKey] }
-    });
-    setIsOpen(false);
-  };
   //#endregion
 
   //#region Render Sections
@@ -113,7 +88,7 @@ function Header({ onCartClick }) {
         onClick={() => navigate("/")}
         className="max-sm:w-full max-sm:mb-3 shrink-0 cursor-pointer"
       >
-        <img src={logo} alt="logo" className="w-[160px]" />
+        <img src={logo} alt="logo" className="w-[130px]" />
       </div>
 
       <div className="flex flex-wrap w-full items-center">
@@ -125,7 +100,10 @@ function Header({ onCartClick }) {
         <div className="ml-auto max-lg:mt-4">
           <ul className="flex items-center">
             <li className="max-sm:hidden flex text-[15px] max-lg:py-2 px-3 font-bold text-[#333] cursor-pointer"
-              onClick={() => navigate('/stores')}>
+              onClick={() => {
+                toast.info("Tính năng đang được phát triển")
+                navigate('/stores')
+                }}>
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
                 className="h-5 w-5 mr-2" 
@@ -309,23 +287,6 @@ function Header({ onCartClick }) {
             >
               {item.name}
             </div>
-            {item.hasSubmenu && isOpen && (
-              <ul className="absolute left-0 mt-2 w-80 bg-white rounded-lg shadow-lg py-2 z-50 grid grid-cols-2 gap-1">
-                {MENU_ITEMS.map((subItem) => (
-                  <li key={subItem.id}>
-                    <div
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleSubmenuClick(subItem.link);
-                      }}
-                      className="block px-4 py-2 text-gray-800 hover:bg-orange-100 hover:text-orange-500 transition-colors duration-200 cursor-pointer"
-                    >
-                      {subItem.name}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            )}
           </li>
         ))}
       </ul>

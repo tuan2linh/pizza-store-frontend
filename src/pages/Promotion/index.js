@@ -1,14 +1,14 @@
 //#region Imports
 import React from 'react';
-import designer from '../../assets/Designer.png'
 import promo from '../../assets/promo.png'
 //#endregion
 
 //#region Promotion Data
 const promotions = [
   {
-    name: 'Khuyến mãi 1',
-    description: 'Mô tả chương trình khuyến mãi 1',
+    name: 'BLACK FRIDAY MUA 1 TẶNG 1 - 2 PIZZA & 2 NƯỚC CHỈ TỪ 205.000VND',
+    description: '* Mua 1 Pizza size M/L kèm 2 thức uống nhỏ sẽ được tặng 1 Pizza cùng size.',
+    description2: ' Áp dụng từ 29/11 đến 02/12/2024 cho hình thức Dùng tại chỗ, Mua mang về hoặc Giao hàng tận nơi.',
     startDate: '2023-10-01',
     endDate: '2023-10-31',
     targetAudience: 'Khách hàng mới',
@@ -56,35 +56,38 @@ const promotions = [
 
 //#region Promotion Component
 function Promotion() {
-  //#region State and Handlers
-  //#endregion
-
-  //#region Render
   return (
     <>
       <div className="bg-dark bg-cover--black-zone bg-grey-lightes" style={{ backgroundImage: `url(${promo})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 max-w-[960px]">
           <div className="flex justify-center">
-            <div className="w-full max-w-4xl"> {/* Changed max-w-xl to max-w-4xl */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4"> {/* Added grid and grid-cols-2 */}
+            <div className="w-full max-w-6xl">
+              <div className="flex flex-col gap-4 !border-[#dfe4ea]">
                 {promotions.map((promo, index) => (
-                  <div key={index} className="bg-white p-2 rounded shadow-lg flex flex-row mb-4">
-                    <div className="w-32 bg-gray-200 rounded flex items-center justify-center">
-                      <img src={designer} alt="Promotion" className="h-full w-full object-cover rounded" />
+                  <div key={index} className="rounded shadow-lg flex">
+                    {/* Image Section */}
+                    <div className="border border-[#717273] rounded-xl p-2 bg-transparent md:w-1/4 overflow-hidden mr-2">
+                      <a href="your-link-here">
+                        <img src="https://img.dominos.vn/Family-Combo.png" alt="Promotion" className="w-full h-full object-cover" />
+                      </a>
                     </div>
-                    <div className="flex flex-col ml-4 justify-center">
-                      <h2 className="text-xl font-bold mb-2 text-center" style={{ color: '#0078ae' }}>{promo.name}</h2>
-                      <p className="mb-2">{promo.description}</p>
-                      <p className="mb-2"><strong>Thời gian bắt đầu:</strong> {promo.startDate}</p>
-                      <p className="mb-2"><strong>Thời gian kết thúc:</strong> {promo.endDate}</p>
-                      <p className="mb-2"><strong>Đối tượng áp dụng:</strong> {promo.targetAudience}</p>
-                      <p className="mb-2"><strong>Ưu đãi:</strong> {promo.offers}</p>
-                      <p className="mb-2"><strong>Tổng sản phẩm tối đa:</strong> {promo.maxProducts}</p>
-                      <div className="w-full bg-gray-200 rounded-full h-4 mb-4 relative">
-                        <div className="bg-orange-400 h-4 rounded-full" style={{ width: `${(10 / promo.maxProducts) * 100}%` }}></div>
-                        <span className="absolute inset-0 flex items-center justify-center text-xs text-gray">Đã sử dụng 10/{promo.maxProducts}</span>
+
+                    {/* Content Section */}
+                    <div className="bg-white w-2/3 p-6 border-2 border-transparent rounded-xl p-2 overflow-hidden">
+                      <h2 className="text-2xl font-bold mb-4" style={{ color: '#0078ae' }}>{promo.name}</h2>
+                      <hr className="mb-4 w-1/5 border-t-4" />
+                      <p className="mb-4 text-gray-600">{promo.description}</p>
+                      <p className="mb-4 text-gray-600">{promo?.description2}</p>
+                      <div className="grid grid-cols-2 gap-4 mb-4">
                       </div>
-                      <button className="bg-orange-400 text-white py-2 px-4 rounded mt-4">Sử dụng</button>
+                      <div className="flex flex-col justify-start flex-wrap">
+                        <button className="bg-[#fdedef] border border-[#f7b5bf] text-[#e31837] py-2 px-8 rounded hover:bg-[#fbcdd4] transition-colors mr-2 mb-2 max-w-[300px]">
+                          <span className='font-bold'>PIZZA SIZE M + 2 NƯỚC NHỎ</span>
+                        </button>
+                        <button className="bg-[#fdedef] border border-[#f7b5bf] text-[#e31837] py-2 px-8 rounded hover:bg-[#fbcdd4] transition-colors mr-2 mb-2 max-w-[300px]">
+                          <span className='font-bold'>PIZZA SIZE M + 2 NƯỚC NHỎ</span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -95,7 +98,6 @@ function Promotion() {
       </div>
     </>
   );
-  //#endregion
 }
 //#endregion
 

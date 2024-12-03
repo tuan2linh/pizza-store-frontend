@@ -15,7 +15,7 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const menuItems = [
     { path: '/admin', label: 'Dashboard', icon: '📊' },
-    { path: '/admin/products', label: 'Quản lý sản phầm', icon: '🍕' },
+    { path: '/admin/products', label: 'Quản lý sản phẩm', icon: '🍕' },
     { path: '/admin/orders', label: 'Quản lý đơn hàng', icon: '🛒' },
     { path: '/admin/customers', label: 'Quản lý người dùng', icon: '👥' },
     { path: '/admin/promotions', label: 'Chương trình khuyến mãi', icon: '🎉' },

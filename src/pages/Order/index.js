@@ -11,7 +11,6 @@ const Order = () => {
     const [address, setAddress] = useState("");
     const [deliveryType, setDeliveryType] = useState("delivery"); // 'delivery' or 'scheduled'
     const [deliveryTime, setDeliveryTime] = useState("");
-    const [deliveryDate, setDeliveryDate] = useState("");
     const [paymentMethod, setPaymentMethod] = useState("cash"); // 'cash', 'creditCard', 'atm', 'viMomo', 'viZaloPay', 'viShopeePay'
     const [cart, setCart] = useState({});
     const [itemsCart, setItemsCart] = useState([]);

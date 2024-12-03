@@ -6,5 +6,5 @@ module.exports = {
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [],  // Remove the line-clamp plugin as it's now part of core Tailwind CSS
 }

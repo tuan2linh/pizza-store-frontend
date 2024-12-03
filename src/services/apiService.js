@@ -18,8 +18,20 @@ const getAllProducts = async () => {
     return axios.get('/products');
 }
 
+const createProduct = async (productData) => {
+    return axios.post('/products', productData);
+}
+
 const getProductById = async (id) => {
     return axios.get(`/products/${id}`);
+}
+
+const updateProduct = async (id, productData) => {
+    return axios.put(`/products/${id}`, productData);
+}
+
+const deleteProduct = async (id) => {
+    return axios.delete(`/products/${id}`);
 }
 /**
     "maincategory": "GET /api/products/filter?mainCategories=Coffee",
@@ -73,5 +85,8 @@ export {
     removeItemFromCart,
     createOrder,
     applyVoucherToOrder,
-    checkVoucher
+    checkVoucher,
+    createProduct,
+    updateProduct,
+    deleteProduct
 }

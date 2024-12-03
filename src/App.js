@@ -12,6 +12,7 @@ import Cart from './pages/Cart'
 import Order from './pages/Order'
 import Stores from './pages/Stores';
 import Dashboard from './pages/Admin/Dashboard'
+import ProductAdmin from './pages/Admin/ProductAdmin';
 import AdminLayout from './layouts/AdminLayout';
 import MainLayout from './layouts/MainLayout';
 import PrivateRoute from './pages/Admin/PrivateRoute';
@@ -35,7 +36,7 @@ function App() {
           <Route element={<PrivateRoute />}>
             <Route path='admin' element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
-              <Route path='products' element={<h1>Products</h1>} />
+              <Route path='products' element={<ProductAdmin />}/>
               <Route path='orders' element={<h1>Orders</h1>} />
               <Route path='customers' element={<h1>Customers</h1>} />
               <Route path='promotions' element={<h1>Promotions</h1>} />
