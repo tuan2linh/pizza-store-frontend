@@ -20,11 +20,13 @@ const AdminLayout = () => {
     { path: '/admin/customers', label: 'Quản lý người dùng', icon: '👥' },
     { path: '/admin/promotions', label: 'Chương trình khuyến mãi', icon: '🎉' },
     { path: '/admin/vouchers', label: 'Quản lý Vouchers', icon: '🎟️' },
-    { path: '/admin/suppliers', label: 'Nhà cung cấp', icon: '🏢' },
-    { path: '/admin/materials', label: 'Quản lý nguyên liệu', icon: '🍅' },
-    { path: '/admin/support', label: 'Hỗ trợ khách hàng', icon: '💬' },
+    { path: '#', label: 'Nhà cung cấp', icon: '🏢', isDeveloping: true },
+    { path: '#', label: 'Quản lý nguyên liệu', icon: '🍅', isDeveloping: true },
+    { path: '#', label: 'Hỗ trợ khách hàng', icon: '💬', isDeveloping: true },
   ];
-
+  const handleDeveloper = () => {
+    toast.info("👨‍💻 Đang phát triển");
+  };
   const handleLogout = () => {
     try {
       postLogout().then((res) => {
@@ -52,15 +54,27 @@ const AdminLayout = () => {
         <hr className="border border-gray-400 w-1/2 mb-4" />
         <nav className="space-y-2">
           {menuItems.map((item) => (
-            <Link
+            <div
               key={item.path}
-              to={item.path}
-              className={`flex items-center gap-2 p-3 rounded-lg hover:bg-gray-700 transition-colors
+              onClick={item.isDeveloping ? handleDeveloper : undefined}
+              className={`flex items-center gap-2 p-3 rounded-lg hover:bg-gray-700 transition-colors cursor-pointer
                 ${location.pathname === item.path ? 'bg-gray-700' : ''}`}
             >
-              <span>{item.icon}</span>
-              {item.label}
-            </Link>
+              {item.isDeveloping ? (
+                <div>
+                  <span>{item.icon}</span>
+                  {item.label}
+                </div>
+              ) : (
+                <Link
+                  to={item.path}
+                  className="flex items-center gap-2 w-full"
+                >
+                  <span>{item.icon}</span>
+                  {item.label}
+                </Link>
+              )}
+            </div>
           ))}
         </nav>
         <div className="mt-auto pt-4">

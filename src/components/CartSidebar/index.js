@@ -97,8 +97,8 @@ const CartSidebar = ({ isOpen, onClose }) => {
     }
   };
 
-  const handleCart = () => {
-    navigate('/cart');
+  const handleOrder = () => {
+    navigate('/order');
     onClose();
   };
 
@@ -175,7 +175,7 @@ const CartSidebar = ({ isOpen, onClose }) => {
             </div>
             <button 
               className="w-full bg-orange-400 text-white py-2 rounded-md hover:bg-orange-500"
-              onClick={handleCart}
+              onClick={handleOrder}
             >
               Tiến hành đặt hàng
             </button>

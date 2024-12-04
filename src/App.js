@@ -8,14 +8,19 @@ import Menu from './pages/Menu'
 import Promotion from './pages/Promotion'
 import OrderList from './pages/OrderList'
 import Contact from './pages/Contact'
-import Cart from './pages/Cart'
 import Order from './pages/Order'
 import Stores from './pages/Stores';
 import Dashboard from './pages/Admin/Dashboard'
 import ProductAdmin from './pages/Admin/ProductAdmin';
+import OrderAdmin from './pages/Admin/OrderAdmin';
+import UserAdmin from './pages/Admin/UserAdmin';
+import VoucherPage from './pages/Admin/Voucher';
+import PromotionManagement from './pages/Admin/Promotion';
 import AdminLayout from './layouts/AdminLayout';
 import MainLayout from './layouts/MainLayout';
 import PrivateRoute from './pages/Admin/PrivateRoute';
+import Profile from './pages/User/Profile'; // Import Profile component
+import OrderPage from './pages/User/Order'; // Add this import
 
 function App() {
   return (
@@ -28,19 +33,20 @@ function App() {
             <Route path="/promotion" element={<Promotion />} />
             <Route path="/order-list" element={<OrderList />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/cart" element={<Cart />} />
             <Route path="/order" element={<Order />} />
             <Route path="/stores" element={<Stores />} />
+            <Route path="/user/profile" element={<Profile />} />
+            <Route path="/user/orders" element={<OrderPage />} />
           </Route>
 
           <Route element={<PrivateRoute />}>
             <Route path='admin' element={<AdminLayout />}>
               <Route index element={<Dashboard />} />
               <Route path='products' element={<ProductAdmin />}/>
-              <Route path='orders' element={<h1>Orders</h1>} />
-              <Route path='customers' element={<h1>Customers</h1>} />
-              <Route path='promotions' element={<h1>Promotions</h1>} />
-              <Route path='vouchers' element={<h1>Vouchers</h1>} />
+              <Route path='orders' element={<OrderAdmin/>} />
+              <Route path='customers' element={<UserAdmin/>} />
+              <Route path='promotions' element={<PromotionManagement/>} />
+              <Route path='vouchers' element={<VoucherPage/>} />
               <Route path='suppliers' element={<h1>Suppliers</h1>} />
               <Route path='materials' element={<h1>Materials</h1>} />
               <Route path='support' element={<h1>Customer Support</h1>} />

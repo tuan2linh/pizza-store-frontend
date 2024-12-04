@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { toast } from 'react-toastify';
 
 function Contact() {
   return (
@@ -32,8 +33,9 @@ function Contact() {
                 ></textarea>
               </div>
               <button
-                type="submit"
+                type="button"
                 className="w-full bg-orange-400 text-white py-2 rounded-lg hover:bg-orange-600 transition-colors"
+                onClick={() => toast.info('Tính năng này đang được phát triển')}
               >
                 Gửi tin nhắn
               </button>

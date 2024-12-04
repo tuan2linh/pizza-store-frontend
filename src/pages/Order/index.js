@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { getUserCart, createOrder, applyVoucherToOrder, checkVoucher } from "../../services/apiService";
+import { getUserCart, createOrder, applyVoucherToOrder, checkVoucher, getUserProfile, addUserAddress } from "../../services/apiService";
 import { toast } from "react-toastify";
+import { Select } from "antd";
 
 const Order = () => {
     const [customerName, setCustomerName] = useState("");
@@ -20,10 +21,32 @@ const Order = () => {
     const [phoneError, setPhoneError] = useState("");
     const [voucherCode, setVoucherCode] = useState("");
     const [voucherDiscount, setVoucherDiscount] = useState(0);
+    const [userAddresses, setUserAddresses] = useState([]);
+    const [selectedAddressId, setSelectedAddressId] = useState(null);
+    const [isAddressModified, setIsAddressModified] = useState(false);
 
     useEffect(() => {
         getCart();
+        fetchUserProfile();
     }, []);
+
+    const fetchUserProfile = async () => {
+        try {
+            const response = await getUserProfile();
+            if (response && response.success === true && response.data.addresses.length > 0) {
+                setUserAddresses(response.data.addresses);
+                // Set default address (first address)
+                const defaultAddress = response.data.addresses[0];
+                setSelectedAddressId(defaultAddress._id);
+                setCustomerName(defaultAddress.recipientName);
+                setEmail(defaultAddress.recipientEmail);
+                setPhone(defaultAddress.recipientPhone);
+                setAddress(defaultAddress.address);
+            }
+        } catch (error) {
+            console.error('Failed to fetch user profile:', error);
+        }
+    };
 
     const getCart = async () => {
         try {
@@ -105,11 +128,12 @@ const Order = () => {
         return true;
     };
 
-    const handleAddressChange = (e) => {
+    const handleAddressInput = (e) => {
         const value = e.target.value;
         setAddress(value);
         validateAddress(value);
     };
+
     const handleCheckVoucher = async () => {
         try {
             console.log(voucherCode);
@@ -168,6 +192,7 @@ const Order = () => {
                 if (voucherDiscount > 0) {
                     const applyVoucherResponse = await applyVoucherToOrder(response.data._id,voucherCode);
                     if (applyVoucherResponse && applyVoucherResponse.success === true) {
+                        toast.success("Áp dụng mã giảm giá thành công");
                     } else {
                         toast.error(applyVoucherResponse?.message || "Áp dụng mã giảm giá không thành công");
                     }
@@ -179,6 +204,50 @@ const Order = () => {
         } catch (error) {
             console.log(error);
         }
+    };
+
+    const handleAddressChange = (addressId) => {
+        const selectedAddress = userAddresses.find(addr => addr._id === addressId);
+        if (selectedAddress) {
+            setSelectedAddressId(addressId);
+            setCustomerName(selectedAddress.recipientName);
+            setEmail(selectedAddress.recipientEmail);
+            setPhone(selectedAddress.recipientPhone);
+            setAddress(selectedAddress.address);
+        }
+    };
+
+    const handleDevelop = () => {
+        toast.info("Chức năng đang phát triển");
+    };
+
+    const handleSaveNewAddress = async () => {
+        const newAddress = {
+            recipientName: customerName,
+            recipientEmail: email,
+            recipientPhone: phone,
+            address: address
+        };
+
+        try {
+            const response = await addUserAddress(newAddress);
+            if (response && response.success === true) {
+                toast.success("Đã lưu địa chỉ mới thành công");
+                fetchUserProfile(); // Refresh the address list
+                setIsAddressModified(false);
+            } else {
+                toast.error(response?.message || "Lưu địa chỉ thất bại");
+            }
+        } catch (error) {
+            console.error('Failed to save address:', error);
+            toast.error("Lưu địa chỉ thất bại");
+        }
+    };
+
+    const handleInputChange = (setter, validator, value) => {
+        setter(value);
+        if (validator) validator(value);
+        setIsAddressModified(true);
     };
 
     return (
@@ -193,6 +262,21 @@ const Order = () => {
                                 <h2 className="text-lg font-medium mb-4">
                                     Thông tin người dùng
                                 </h2>
+                                {/* Add address selection dropdown */}
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Địa chỉ giao hàng (Chọn từ thông tin đã lưu)
+                                    </label>
+                                    <Select
+                                        className="w-full"
+                                        value={selectedAddressId}
+                                        onChange={handleAddressChange}
+                                        options={userAddresses.map(addr => ({
+                                            value: addr._id,
+                                            label: `${addr.recipientName} - ${addr.address}`
+                                        }))}
+                                    />
+                                </div>
                                 <div className="mb-4">
                                     <label
                                         htmlFor="customerName"
@@ -206,10 +290,7 @@ const Order = () => {
                                         className={`shadow appearance-none border ${customerNameError ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
                                         placeholder="Nhập tên khách hàng"
                                         value={customerName}
-                                        onChange={(e) => {
-                                            setCustomerName(e.target.value);
-                                            validateCustomerName(e.target.value);
-                                        }}
+                                        onChange={(e) => handleInputChange(setCustomerName, validateCustomerName, e.target.value)}
                                     />
                                     {customerNameError && (
                                         <p className="text-red-500 text-xs italic mt-1">{customerNameError}</p>
@@ -228,10 +309,7 @@ const Order = () => {
                                         className={`shadow appearance-none border ${emailError ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
                                         placeholder="Nhập email của bạn"
                                         value={email}
-                                        onChange={(e) => {
-                                            setEmail(e.target.value);
-                                            validateEmail(e.target.value);
-                                        }}
+                                        onChange={(e) => handleInputChange(setEmail, validateEmail, e.target.value)}
                                     />
                                     {emailError && (
                                         <p className="text-red-500 text-xs italic mt-1">{emailError}</p>
@@ -250,10 +328,7 @@ const Order = () => {
                                         className={`shadow appearance-none border ${phoneError ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
                                         placeholder="Nhập số điện thoại của bạn"
                                         value={phone}
-                                        onChange={(e) => {
-                                            setPhone(e.target.value);
-                                            validatePhone(e.target.value);
-                                        }}
+                                        onChange={(e) => handleInputChange(setPhone, validatePhone, e.target.value)}
                                     />
                                     {phoneError && (
                                         <p className="text-red-500 text-xs italic mt-1">{phoneError}</p>
@@ -272,12 +347,22 @@ const Order = () => {
                                         className={`shadow appearance-none border ${addressError ? 'border-red-500' : ''} rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline`}
                                         placeholder="Nhập theo định dạng: Tên đường, Phường, Quận, Thành phố"
                                         value={address}
-                                        onChange={handleAddressChange}
+                                        onChange={(e) => handleInputChange(setAddress, validateAddress, e.target.value)}
                                     />
                                     {addressError && (
                                         <p className="text-red-500 text-xs italic mt-1">{addressError}</p>
                                     )}
                                 </div>
+                                {isAddressModified && (
+                                    <div className="mb-4">
+                                        <button
+                                            onClick={handleSaveNewAddress}
+                                            className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors"
+                                        >
+                                            Lưu địa chỉ mới
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                             {/* Thông tin đặt hàng */}
                             <div className="bg-white rounded-lg shadow-md p-4">
@@ -386,7 +471,8 @@ const Order = () => {
                                         name="paymentMethod"
                                         value="atm"
                                         checked={paymentMethod === "atm"}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
+                                        // onChange={(e) => setPaymentMethod(e.target.value)}
+                                        onClick={handleDevelop}
                                         className="mr-3"
                                     />
                                     <img
@@ -403,7 +489,8 @@ const Order = () => {
                                         name="paymentMethod"
                                         value="creditCard"
                                         checked={paymentMethod === "creditCard"}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
+                                        // onChange={(e) => setPaymentMethod(e.target.value)}
+                                        onClick={handleDevelop}
                                         className="mr-3"
                                     />
                                     <img
@@ -419,7 +506,8 @@ const Order = () => {
                                         id="viMomo"
                                         name="paymentMethod"
                                         value="viMomo"
-                                        checked={paymentMethod === "viMomo"}
+                                        // checked={paymentMethod === "viMomo"}
+                                        onClick={handleDevelop}
                                         onChange={(e) => setPaymentMethod(e.target.value)}
                                         className="mr-3"
                                     />
@@ -437,7 +525,8 @@ const Order = () => {
                                         name="paymentMethod"
                                         value="viZaloPay"
                                         checked={paymentMethod === "viZaloPay"}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
+                                        onClick={handleDevelop}
+                                        // onChange={(e) => setPaymentMethod(e.target.value)}
                                         className="mr-3"
                                     />
                                     <img
@@ -454,7 +543,8 @@ const Order = () => {
                                         name="paymentMethod"
                                         value="viShopeePay"
                                         checked={paymentMethod === "viShopeePay"}
-                                        onChange={(e) => setPaymentMethod(e.target.value)}
+                                        // onChange={(e) => setPaymentMethod(e.target.value)}
+                                        onClick={handleDevelop}
                                         className="mr-3"
                                     />
                                     <img
@@ -488,7 +578,7 @@ const Order = () => {
                             <button 
                             onClick={handleOrder}
                             className="bg-orange-300 hover:bg-orange-500 text-white font-bold py-2 px-4 rounded">
-                                HOÀN TẤT THANH TOÁN
+                                HOÀN TẤT ĐẶT HÀNG
                             </button>
                         </div>
                     </div>
@@ -544,7 +634,7 @@ const Order = () => {
                                                 {item.subTotal.toLocaleString("vi-VN")}₫
                                             </p>
                                             <div className="text-sm text-gray-500">
-                                            Cỡ: {sizeMapping[item.size] || item.size}
+                                                Cỡ: {sizeMapping[item.size] || item.size}
                                             </div>
                                         </div>
                                     </div>
