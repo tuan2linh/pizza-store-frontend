@@ -1,8 +1,8 @@
 import axios from '../utils/axiosCustomize';
 
 //===== AUTH APIS =====//
-const postRegister = async (username, password, email) => {
-    return axios.post('/auth/register', { username: username, password: password, email: email });
+const postRegister = async (username, password, email, fullName, phoneNumber) => {
+    return axios.post('/auth/register', { username: username, password: password, email: email, fullName: fullName, phoneNumber: phoneNumber });
 }
 
 const postLogin = async (username, password) => {

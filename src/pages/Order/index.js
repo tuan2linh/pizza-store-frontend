@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import { getUserCart, createOrder, applyVoucherToOrder, checkVoucher, getUserProfile, addUserAddress } from "../../services/apiService";
 import { toast } from "react-toastify";
 import { Select } from "antd";
+import { useDispatch, useSelector } from 'react-redux';  // Add useDispatch
+import { useNavigate } from "react-router-dom";
 
 const Order = () => {
     const [customerName, setCustomerName] = useState("");
@@ -24,6 +26,9 @@ const Order = () => {
     const [userAddresses, setUserAddresses] = useState([]);
     const [selectedAddressId, setSelectedAddressId] = useState(null);
     const [isAddressModified, setIsAddressModified] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch(); // Add dispatch
+    const currentCount = useSelector(state => state.cart.itemCount); // Move this to component level
 
     useEffect(() => {
         getCart();
@@ -160,7 +165,7 @@ const Order = () => {
             return;
         }
         const [street, ward, district, city] = address.split(",").map(item => item.trim());
-        deliveryFee = 300000;
+        deliveryFee = 30000;
         const orderData = {
             customerInfo: {
                 name: customerName,
@@ -197,9 +202,11 @@ const Order = () => {
                         toast.error(applyVoucherResponse?.message || "Áp dụng mã giảm giá không thành công");
                     }
                 }    
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000); 
+                navigate('/user/orders');
+                dispatch({ type: 'SET_CART_ITEMS_COUNT', payload: 0 });
+            }
+            else {
+                toast.error(response?.message || "Đặt hàng thất bại");
             }
         } catch (error) {
             console.log(error);
@@ -428,7 +435,8 @@ const Order = () => {
                                                 name="deliveryType"
                                                 value="scheduled"
                                                 checked={deliveryType === "scheduled"}
-                                                onChange={(e) => setDeliveryType(e.target.value)}
+                                                // onChange={(e) => setDeliveryType(e.target.value)}
+                                                onClick={handleDevelop}
                                                 className="mr-2"
                                             />
                                             <label htmlFor="scheduled">Đặt hàng - Hẹn giờ giao</label>
