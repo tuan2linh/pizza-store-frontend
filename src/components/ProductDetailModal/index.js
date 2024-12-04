@@ -14,7 +14,7 @@ function ProductDetailModal({ product, isOpen, onClose }) {
   const isPizza = product?.productType === 'pizza';
 
   useEffect(() => {
-    if (isPizza && !product?.price?.small) {
+    if (!product?.price?.small) {
       setSize('medium');
     }
   }, [product, isPizza]);
@@ -57,15 +57,16 @@ function ProductDetailModal({ product, isOpen, onClose }) {
 
   const handleAddToCart = async () => {
     try{
-      console.log(product, quantity, size);
       const response = await addItemToCart(product._id, quantity, size);
       console.log(response);
       if (response && response.success===true) {
         // Use the currentCount from the component level
         dispatch({ type: 'SET_CART_ITEMS_COUNT', payload: currentCount + 1 });
-        
         toast.success('Đã thêm vào giỏ hàng');
         onClose();
+      }
+      else{
+        toast.error(response?.message || 'Đã xảy ra lỗi khi thêm')
       }
     } catch (error) {
       console.log(error);
