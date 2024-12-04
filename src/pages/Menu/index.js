@@ -21,6 +21,8 @@ function Menu() {
     const [chickenData, setChickenData] = useState([]);
     const [drinkData, setDrinkData] = useState([]);
     const [pastaData, setPastaData] = useState([]);
+    const [appetizerData, setAppetizerData] = useState([]);
+    const [dessertData, setDessertData] = useState([]);
 
     useEffect(() => {
       if (location.state?.activeMainCategory) {
@@ -37,6 +39,9 @@ function Menu() {
         getAllProduct();
         getAllChickens();
         getAllDrinks();
+        getAllPastas();
+        getAllAppetizers();
+        getAllDesserts();
     }, []);
 
     useEffect(() => {
@@ -86,13 +91,13 @@ function Menu() {
         try {
             if(activeCategory === 'all'){
                 const response = await getProductsByCategory('pizza');
-                if (response) {
+                if (response && response.success===true) {
                     setPizzaData(response.data);
                 }
             }
             else{
                 const response = await getProductsBySubCategory(activeCategory);
-                if (response) {
+                if (response && response.success===true) {
                     setPizzaData(response.data);
                 }
             }
@@ -104,7 +109,7 @@ function Menu() {
     const getAllChickens = async () => {
         try {
             const response = await getProductsByCategory('chicken');
-            if (response) {
+            if (response && response.success===true) {
                 setChickenData(response.data);
             }
         }
@@ -112,7 +117,39 @@ function Menu() {
             console.log(error);
         }
     };
-
+    const getAllPastas = async () => {
+        try {
+            const response = await getProductsByCategory('pasta');
+            if (response && response.success===true) {
+                setPastaData(response.data);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    const getAllAppetizers = async () => {
+        try {
+            const response = await getProductsByCategory('appetizers');
+            if (response && response.success===true) {
+                setAppetizerData(response.data);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+    const getAllDesserts = async () => {
+        try {
+            const response = await getProductsByCategory('desserts');
+            if (response && response.success===true) {
+                setDessertData(response.data);
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
     const getAllDrinks = async () => {
         try {
             const response = await getProductsByCategory('drinks');
@@ -219,7 +256,85 @@ function Menu() {
                 </div>
             ))}
         </div>
-    ); 
+    );
+    const renderPastaSection = () => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {pastaData.map((pasta) => (
+                <div key={pasta.id} 
+                     className="bg-white rounded-lg shadow-md overflow-hidden max-w-xs flex flex-col justify-between h-80 cursor-pointer"
+                     onClick={() => handleProductClick(pasta, 'pasta')}>
+                    <div className="relative w-full h-48 bg-gray-100 overflow-hidden group">
+                        <img
+                            src={pasta.image}
+                            alt={pasta.name}
+                            className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        />
+                    </div>
+                    <div className="p-3">
+                        <h3 className="text-lg font-bold mb-1 text-center text-[#0078ae] hover:underline cursor-pointer">{pasta.name}</h3>
+                        <p className="text-sm text-gray-600 text-center">{pasta.description}</p>
+                    </div>
+                    <div className="p-3 text-center">
+                        <div className="text-sm font-bold">
+                            <p>Medium - {pasta.price.medium.toLocaleString()}đ</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+    const renderAppetizerSection = () => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {appetizerData.map((appetizer) => (
+                <div key={appetizer.id} 
+                     className="bg-white rounded-lg shadow-md overflow-hidden max-w-xs flex flex-col justify-between h-80 cursor-pointer"
+                     onClick={() => handleProductClick(appetizer, 'appetizer')}>
+                    <div className="relative w-full h-48 bg-gray-100 overflow-hidden group">
+                        <img
+                            src={appetizer.image}
+                            alt={appetizer.name}
+                            className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        />
+                    </div>
+                    <div className="p-3">
+                        <h3 className="text-lg font-bold mb-1 text-center text-[#0078ae] hover:underline cursor-pointer">{appetizer.name}</h3>
+                        <p className="text-sm text-gray-600 text-center">{appetizer.description}</p>
+                    </div>
+                    <div className="p-3 text-center">
+                        <div className="text-sm font-bold">
+                            <p>Medium - {appetizer.price.medium.toLocaleString()}đ</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
+    const renderDessertSection = () => (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {dessertData.map((dessert) => (
+                <div key={dessert.id} 
+                     className="bg-white rounded-lg shadow-md overflow-hidden max-w-xs flex flex-col justify-between h-80 cursor-pointer"
+                     onClick={() => handleProductClick(dessert, 'dessert')}>
+                    <div className="relative w-full h-48 bg-gray-100 overflow-hidden group">
+                        <img
+                            src={dessert.image}
+                            alt={dessert.name}
+                            className="w-full h-full object-cover transition-transform duration-300 ease-in-out group-hover:scale-110"
+                        />
+                    </div>
+                    <div className="p-3">
+                        <h3 className="text-lg font-bold mb-1 text-center text-[#0078ae] hover:underline cursor-pointer">{dessert.name}</h3>
+                        <p className="text-sm text-gray-600 text-center">{dessert.description}</p>
+                    </div>
+                    <div className="p-3 text-center">
+                        <div className="text-sm font-bold">
+                            <p>Medium - {dessert.price.medium.toLocaleString()}đ</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
+    );
     //#endregion
 
     //#region Main Render
@@ -234,7 +349,11 @@ function Menu() {
                                 ? 'bg-orange-400 text-white'
                                 : 'bg-gray-200 hover:bg-gray-300'
                                 }`}
-                            onClick={() => setActiveMainCategory(key)}
+                                onClick={() => {
+                                    setTimeout(() => {
+                                        setActiveMainCategory(key);
+                                    }, 100); // 300ms delay
+                                }}
                         >
                             {icon}
                             {name}
@@ -245,9 +364,9 @@ function Menu() {
                 {/* Conditional Rendering of Sections */}
                 {activeMainCategory === 'pizza' && renderPizzaSection()}
                 {activeMainCategory === 'chicken' && renderChickenSection()}
-                {activeMainCategory === 'pasta' && <div>abc</div>}
-                {activeMainCategory === 'appetizers' && <div>Appetizers Section</div>}
-                {activeMainCategory === 'desserts' && <div>Desserts Section</div>}
+                {activeMainCategory === 'pasta' && renderPastaSection()}
+                {activeMainCategory === 'appetizers' && renderAppetizerSection()}
+                {activeMainCategory === 'desserts' && renderDessertSection()}
                 {activeMainCategory === 'drinks' && renderDrinkSection()}
             </div>
             <ProductDetailModal
