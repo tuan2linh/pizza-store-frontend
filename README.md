@@ -1,70 +1,128 @@
-# Getting Started with Create React App
+# Pizza Store Frontend 🍕
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern React-based web application for managing a pizza delivery business with features for both customers and administrators.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+### Customer Features ✨
 
-### `npm start`
+- 🛒 Shopping cart with real-time updates
+- 🍕 Browse pizzas and other menu items with size options
+- 💰 Apply vouchers and promotional discounts
+- 📍 Save and manage multiple delivery addresses
+- 📱 Responsive design for mobile devices
+- 📦 Real-time order tracking
+- 💳 Multiple payment methods (Cash/Bank transfer)
+- 👤 User profile management
+- 🔍 Product filtering and search
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### Admin Features 👨‍💼
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 📊 Interactive analytics dashboard
+- 📝 Comprehensive order management system
+- 🏷️ Product catalog management
+- 👥 Customer account management
+- 🎉 Promotion campaign management
+- 🎟️ Voucher system management
+- 📈 Sales and revenue tracking
+- 🚚 Delivery status management
 
-### `npm test`
+## Tech Stack
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Frontend:** React
+- **State Management:** Redux
+- **Styling:**
+  - Tailwind CSS for utility-first styling
+  - Ant Design components for UI elements
+- **HTTP Client:** Axios
+- **Routing:** React Router
+- **Notifications:** React Toastify
+- **Charts:** Chart.js with React-Chartjs-2
 
-### `npm run build`
+## Getting Started
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+  ```
+  git clone [repository-url]
+  ```
+2. Install dependencies:
+  ```
+  npm install
+  ```
+3. Create environment file
+  ```
+  cp .env.example .env
+  ```
+4. Start development server:
+```
+npm start
+```
+7. Build for production:
+ ```
+ npm run build
+ ``` 
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Project Structure
+```
+src/
+├── assets/        # Static files
+├── components/    # Reusable components
+├── layouts/       # Layout components
+├── pages/         # Page components
+│   ├── Admin/     # Admin pages
+│   └── User/      # Customer pages
+├── redux/         # Redux store and actions
+├── services/      # API services
+└── utils/         # Utility functions
+```
+## Key Features In Detail
 
-### `npm run eject`
+### Customer Interface
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+- **Menu Browsing:** Filter and search through pizza menu with detailed item views
+- **Cart Management:** Add/remove items, adjust quantities, apply vouchers
+- **Address Management:** Save multiple delivery addresses
+- **Order Tracking:** Real-time updates on order status
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### Admin Interface
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- **Dashboard:** Real-time analytics and sales monitoring
+- **Order Management:** Process orders through various stages (pending → completed)
+- **Product Management:** Add/edit/delete menu items with pricing
+- **User Management:** View and manage customer accounts
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Contributing
 
-## Learn More
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## License
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-### Code Splitting
+## Acknowledgments
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Design inspired by modern food delivery applications
+- Built with scalability and user experience in mind
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-### Deployment
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-### `npm run build` fails to minify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+
+
+
+
+
