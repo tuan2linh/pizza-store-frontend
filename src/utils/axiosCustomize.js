@@ -3,7 +3,7 @@ import {store} from '../redux/store';
 
 
 const instance = axios.create({
-    baseURL: 'http://54.153.176.43/api',
+    baseURL: 'http://localhost:8081/api',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
